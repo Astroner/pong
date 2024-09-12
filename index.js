@@ -3,12 +3,11 @@ const http = require("http");
 const { WebSocketServer, createWebSocketStream } = require("ws");
 const { readFileSync } = require("fs");
 
-const html = readFileSync("index.html")
+const html = readFileSync("index.min.html")
 
 const server = http.createServer((_, res) => {
     res.setHeader("Content-Type", "text/html; charset=UTF-8");
     res.end(html);
-    // res.end(readFileSync("index.html"));
 });
 
 const wss = new WebSocketServer({
