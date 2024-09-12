@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong</title>
+    <script>
+        var QRCode=function(t){"use strict";var r,e=function(){return"function"==typeof Promise&&Promise.prototype&&Promise.prototype.then},n=[0,26,44,70,100,134,172,196,242,292,346,404,466,532,581,655,733,815,901,991,1085,1156,1258,1364,1474,1588,1706,1828,1921,2051,2185,2323,2465,2611,2761,2876,3034,3196,3362,3532,3706],o=function(t){if(!t)throw new Error('"version" cannot be null or undefined');if(t<1||t>40)throw new Error('"version" should be in range from 1 to 40');return 4*t+17},a=function(t){return n[t]},i=function(t){for(var r=0;0!==t;)r++,t>>>=1;return r},u=function(t){if("function"!=typeof t)throw new Error('"toSJISFunc" is not a valid function.');r=t},s=function(){return void 0!==r},f=function(t){return r(t)};function h(t,r){return t(r={exports:{}},r.exports),r.exports}var c=h((function(t,r){r.L={bit:1},r.M={bit:0},r.Q={bit:3},r.H={bit:2},r.isValid=function(t){return t&&void 0!==t.bit&&t.bit>=0&&t.bit<4},r.from=function(t,e){if(r.isValid(t))return t;try{return function(t){if("string"!=typeof t)throw new Error("Param is not a string");switch(t.toLowerCase()){case"l":case"low":return r.L;case"m":case"medium":return r.M;case"q":case"quartile":return r.Q;case"h":case"high":return r.H;default:throw new Error("Unknown EC Level: "+t)}}(t)}catch(t){return e}}}));function g(){this.buffer=[],this.length=0}c.L,c.M,c.Q,c.H,c.isValid,g.prototype={get:function(t){var r=Math.floor(t/8);return 1==(this.buffer[r]>>>7-t%8&1)},put:function(t,r){for(var e=0;e<r;e++)this.putBit(1==(t>>>r-e-1&1))},getLengthInBits:function(){return this.length},putBit:function(t){var r=Math.floor(this.length/8);this.buffer.length<=r&&this.buffer.push(0),t&&(this.buffer[r]|=128>>>this.length%8),this.length++}};var d=g;function l(t){if(!t||t<1)throw new Error("BitMatrix size must be defined and greater than 0");this.size=t,this.data=new Uint8Array(t*t),this.reservedBit=new Uint8Array(t*t)}l.prototype.set=function(t,r,e,n){var o=t*this.size+r;this.data[o]=e,n&&(this.reservedBit[o]=!0)},l.prototype.get=function(t,r){return this.data[t*this.size+r]},l.prototype.xor=function(t,r,e){this.data[t*this.size+r]^=e},l.prototype.isReserved=function(t,r){return this.reservedBit[t*this.size+r]};var v=l,p=h((function(t,r){var e=o;r.getRowColCoords=function(t){if(1===t)return[];for(var r=Math.floor(t/7)+2,n=e(t),o=145===n?26:2*Math.ceil((n-13)/(2*r-2)),a=[n-7],i=1;i<r-1;i++)a[i]=a[i-1]-o;return a.push(6),a.reverse()},r.getPositions=function(t){for(var e=[],n=r.getRowColCoords(t),o=n.length,a=0;a<o;a++)for(var i=0;i<o;i++)0===a&&0===i||0===a&&i===o-1||a===o-1&&0===i||e.push([n[a],n[i]]);return e}}));p.getRowColCoords,p.getPositions;var w=o,m=function(t){var r=w(t);return[[0,0],[r-7,0],[0,r-7]]},E=h((function(t,r){r.Patterns={PATTERN000:0,PATTERN001:1,PATTERN010:2,PATTERN011:3,PATTERN100:4,PATTERN101:5,PATTERN110:6,PATTERN111:7};var e=3,n=3,o=40,a=10;function i(t,e,n){switch(t){case r.Patterns.PATTERN000:return(e+n)%2==0;case r.Patterns.PATTERN001:return e%2==0;case r.Patterns.PATTERN010:return n%3==0;case r.Patterns.PATTERN011:return(e+n)%3==0;case r.Patterns.PATTERN100:return(Math.floor(e/2)+Math.floor(n/3))%2==0;case r.Patterns.PATTERN101:return e*n%2+e*n%3==0;case r.Patterns.PATTERN110:return(e*n%2+e*n%3)%2==0;case r.Patterns.PATTERN111:return(e*n%3+(e+n)%2)%2==0;default:throw new Error("bad maskPattern:"+t)}}r.isValid=function(t){return null!=t&&""!==t&&!isNaN(t)&&t>=0&&t<=7},r.from=function(t){return r.isValid(t)?parseInt(t,10):void 0},r.getPenaltyN1=function(t){for(var r=t.size,n=0,o=0,a=0,i=null,u=null,s=0;s<r;s++){o=a=0,i=u=null;for(var f=0;f<r;f++){var h=t.get(s,f);h===i?o++:(o>=5&&(n+=e+(o-5)),i=h,o=1),(h=t.get(f,s))===u?a++:(a>=5&&(n+=e+(a-5)),u=h,a=1)}o>=5&&(n+=e+(o-5)),a>=5&&(n+=e+(a-5))}return n},r.getPenaltyN2=function(t){for(var r=t.size,e=0,o=0;o<r-1;o++)for(var a=0;a<r-1;a++){var i=t.get(o,a)+t.get(o,a+1)+t.get(o+1,a)+t.get(o+1,a+1);4!==i&&0!==i||e++}return e*n},r.getPenaltyN3=function(t){for(var r=t.size,e=0,n=0,a=0,i=0;i<r;i++){n=a=0;for(var u=0;u<r;u++)n=n<<1&2047|t.get(i,u),u>=10&&(1488===n||93===n)&&e++,a=a<<1&2047|t.get(u,i),u>=10&&(1488===a||93===a)&&e++}return e*o},r.getPenaltyN4=function(t){for(var r=0,e=t.data.length,n=0;n<e;n++)r+=t.data[n];return Math.abs(Math.ceil(100*r/e/5)-10)*a},r.applyMask=function(t,r){for(var e=r.size,n=0;n<e;n++)for(var o=0;o<e;o++)r.isReserved(o,n)||r.xor(o,n,i(t,o,n))},r.getBestMask=function(t,e){for(var n=Object.keys(r.Patterns).length,o=0,a=1/0,i=0;i<n;i++){e(i),r.applyMask(i,t);var u=r.getPenaltyN1(t)+r.getPenaltyN2(t)+r.getPenaltyN3(t)+r.getPenaltyN4(t);r.applyMask(i,t),u<a&&(a=u,o=i)}return o}}));E.Patterns,E.isValid,E.getPenaltyN1,E.getPenaltyN2,E.getPenaltyN3,E.getPenaltyN4,E.applyMask,E.getBestMask;var y=[1,1,1,1,1,1,1,1,1,1,2,2,1,2,2,4,1,2,4,4,2,4,4,4,2,4,6,5,2,4,6,6,2,5,8,8,4,5,8,8,4,5,8,11,4,8,10,11,4,9,12,16,4,9,16,16,6,10,12,18,6,10,17,16,6,11,16,19,6,13,18,21,7,14,21,25,8,16,20,25,8,17,23,25,9,17,23,34,9,18,25,30,10,20,27,32,12,21,29,35,12,23,34,37,12,25,34,40,13,26,35,42,14,28,38,45,15,29,40,48,16,31,43,51,17,33,45,54,18,35,48,57,19,37,51,60,19,38,53,63,20,40,56,66,21,43,59,70,22,45,62,74,24,47,65,77,25,49,68,81],A=[7,10,13,17,10,16,22,28,15,26,36,44,20,36,52,64,26,48,72,88,36,64,96,112,40,72,108,130,48,88,132,156,60,110,160,192,72,130,192,224,80,150,224,264,96,176,260,308,104,198,288,352,120,216,320,384,132,240,360,432,144,280,408,480,168,308,448,532,180,338,504,588,196,364,546,650,224,416,600,700,224,442,644,750,252,476,690,816,270,504,750,900,300,560,810,960,312,588,870,1050,336,644,952,1110,360,700,1020,1200,390,728,1050,1260,420,784,1140,1350,450,812,1200,1440,480,868,1290,1530,510,924,1350,1620,540,980,1440,1710,570,1036,1530,1800,570,1064,1590,1890,600,1120,1680,1980,630,1204,1770,2100,660,1260,1860,2220,720,1316,1950,2310,750,1372,2040,2430],I=function(t,r){switch(r){case c.L:return y[4*(t-1)+0];case c.M:return y[4*(t-1)+1];case c.Q:return y[4*(t-1)+2];case c.H:return y[4*(t-1)+3];default:return}},M=function(t,r){switch(r){case c.L:return A[4*(t-1)+0];case c.M:return A[4*(t-1)+1];case c.Q:return A[4*(t-1)+2];case c.H:return A[4*(t-1)+3];default:return}},N=new Uint8Array(512),B=new Uint8Array(256);!function(){for(var t=1,r=0;r<255;r++)N[r]=t,B[t]=r,256&(t<<=1)&&(t^=285);for(var e=255;e<512;e++)N[e]=N[e-255]}();var C=function(t){return N[t]},P=function(t,r){return 0===t||0===r?0:N[B[t]+B[r]]},R=h((function(t,r){r.mul=function(t,r){for(var e=new Uint8Array(t.length+r.length-1),n=0;n<t.length;n++)for(var o=0;o<r.length;o++)e[n+o]^=P(t[n],r[o]);return e},r.mod=function(t,r){for(var e=new Uint8Array(t);e.length-r.length>=0;){for(var n=e[0],o=0;o<r.length;o++)e[o]^=P(r[o],n);for(var a=0;a<e.length&&0===e[a];)a++;e=e.slice(a)}return e},r.generateECPolynomial=function(t){for(var e=new Uint8Array([1]),n=0;n<t;n++)e=r.mul(e,new Uint8Array([1,C(n)]));return e}}));function T(t){this.genPoly=void 0,this.degree=t,this.degree&&this.initialize(this.degree)}R.mul,R.mod,R.generateECPolynomial,T.prototype.initialize=function(t){this.degree=t,this.genPoly=R.generateECPolynomial(this.degree)},T.prototype.encode=function(t){if(!this.genPoly)throw new Error("Encoder not initialized");var r=new Uint8Array(t.length+this.degree);r.set(t);var e=R.mod(r,this.genPoly),n=this.degree-e.length;if(n>0){var o=new Uint8Array(this.degree);return o.set(e,n),o}return e};var L=T,b=function(t){return!isNaN(t)&&t>=1&&t<=40},U="(?:[u3000-u303F]|[u3040-u309F]|[u30A0-u30FF]|[uFF00-uFFEF]|[u4E00-u9FAF]|[u2605-u2606]|[u2190-u2195]|u203B|[u2010u2015u2018u2019u2025u2026u201Cu201Du2225u2260]|[u0391-u0451]|[u00A7u00A8u00B1u00B4u00D7u00F7])+",x="(?:(?![A-Z0-9 $%*+\\-./:]|"+(U=U.replace(/u/g,"\\u"))+")(?:.|[\r\n]))+",k=new RegExp(U,"g"),F=new RegExp("[^A-Z0-9 $%*+\\-./:]+","g"),S=new RegExp(x,"g"),D=new RegExp("[0-9]+","g"),Y=new RegExp("[A-Z $%*+\\-./:]+","g"),_=new RegExp("^"+U+"$"),z=new RegExp("^[0-9]+$"),H=new RegExp("^[A-Z0-9 $%*+\\-./:]+$"),J={KANJI:k,BYTE_KANJI:F,BYTE:S,NUMERIC:D,ALPHANUMERIC:Y,testKanji:function(t){return _.test(t)},testNumeric:function(t){return z.test(t)},testAlphanumeric:function(t){return H.test(t)}},K=h((function(t,r){r.NUMERIC={id:"Numeric",bit:1,ccBits:[10,12,14]},r.ALPHANUMERIC={id:"Alphanumeric",bit:2,ccBits:[9,11,13]},r.BYTE={id:"Byte",bit:4,ccBits:[8,16,16]},r.KANJI={id:"Kanji",bit:8,ccBits:[8,10,12]},r.MIXED={bit:-1},r.getCharCountIndicator=function(t,r){if(!t.ccBits)throw new Error("Invalid mode: "+t);if(!b(r))throw new Error("Invalid version: "+r);return r>=1&&r<10?t.ccBits[0]:r<27?t.ccBits[1]:t.ccBits[2]},r.getBestModeForData=function(t){return J.testNumeric(t)?r.NUMERIC:J.testAlphanumeric(t)?r.ALPHANUMERIC:J.testKanji(t)?r.KANJI:r.BYTE},r.toString=function(t){if(t&&t.id)return t.id;throw new Error("Invalid mode")},r.isValid=function(t){return t&&t.bit&&t.ccBits},r.from=function(t,e){if(r.isValid(t))return t;try{return function(t){if("string"!=typeof t)throw new Error("Param is not a string");switch(t.toLowerCase()){case"numeric":return r.NUMERIC;case"alphanumeric":return r.ALPHANUMERIC;case"kanji":return r.KANJI;case"byte":return r.BYTE;default:throw new Error("Unknown mode: "+t)}}(t)}catch(t){return e}}}));K.NUMERIC,K.ALPHANUMERIC,K.BYTE,K.KANJI,K.MIXED,K.getCharCountIndicator,K.getBestModeForData,K.isValid;var O=h((function(t,r){var e=i(7973);function n(t,r){return K.getCharCountIndicator(t,r)+4}function o(t,r){var e=0;return t.forEach((function(t){var o=n(t.mode,r);e+=o+t.getBitsLength()})),e}r.from=function(t,r){return b(t)?parseInt(t,10):r},r.getCapacity=function(t,r,e){if(!b(t))throw new Error("Invalid QR Code version");void 0===e&&(e=K.BYTE);var o=8*(a(t)-M(t,r));if(e===K.MIXED)return o;var i=o-n(e,t);switch(e){case K.NUMERIC:return Math.floor(i/10*3);case K.ALPHANUMERIC:return Math.floor(i/11*2);case K.KANJI:return Math.floor(i/13);case K.BYTE:default:return Math.floor(i/8)}},r.getBestVersionForData=function(t,e){var n,a=c.from(e,c.M);if(Array.isArray(t)){if(t.length>1)return function(t,e){for(var n=1;n<=40;n++){if(o(t,n)<=r.getCapacity(n,e,K.MIXED))return n}}(t,a);if(0===t.length)return 1;n=t[0]}else n=t;return function(t,e,n){for(var o=1;o<=40;o++)if(e<=r.getCapacity(o,n,t))return o}(n.mode,n.getLength(),a)},r.getEncodedBits=function(t){if(!b(t)||t<7)throw new Error("Invalid QR Code version");for(var r=t<<12;i(r)-e>=0;)r^=7973<<i(r)-e;return t<<12|r}}));O.getCapacity,O.getBestVersionForData,O.getEncodedBits;var Q=i(1335),V=function(t,r){for(var e=t.bit<<3|r,n=e<<10;i(n)-Q>=0;)n^=1335<<i(n)-Q;return 21522^(e<<10|n)};function q(t){this.mode=K.NUMERIC,this.data=t.toString()}q.getBitsLength=function(t){return 10*Math.floor(t/3)+(t%3?t%3*3+1:0)},q.prototype.getLength=function(){return this.data.length},q.prototype.getBitsLength=function(){return q.getBitsLength(this.data.length)},q.prototype.write=function(t){var r,e,n;for(r=0;r+3<=this.data.length;r+=3)e=this.data.substr(r,3),n=parseInt(e,10),t.put(n,10);var o=this.data.length-r;o>0&&(e=this.data.substr(r),n=parseInt(e,10),t.put(n,3*o+1))};var j=q,$=["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"," ","$","%","*","+","-",".","/",":"];function X(t){this.mode=K.ALPHANUMERIC,this.data=t}X.getBitsLength=function(t){return 11*Math.floor(t/2)+t%2*6},X.prototype.getLength=function(){return this.data.length},X.prototype.getBitsLength=function(){return X.getBitsLength(this.data.length)},X.prototype.write=function(t){var r;for(r=0;r+2<=this.data.length;r+=2){var e=45*$.indexOf(this.data[r]);e+=$.indexOf(this.data[r+1]),t.put(e,11)}this.data.length%2&&t.put($.indexOf(this.data[r]),6)};var Z=X;function W(t){this.mode=K.BYTE,"string"==typeof t&&(t=function(t){for(var r=[],e=t.length,n=0;n<e;n++){var o=t.charCodeAt(n);if(o>=55296&&o<=56319&&e>n+1){var a=t.charCodeAt(n+1);a>=56320&&a<=57343&&(o=1024*(o-55296)+a-56320+65536,n+=1)}o<128?r.push(o):o<2048?(r.push(o>>6|192),r.push(63&o|128)):o<55296||o>=57344&&o<65536?(r.push(o>>12|224),r.push(o>>6&63|128),r.push(63&o|128)):o>=65536&&o<=1114111?(r.push(o>>18|240),r.push(o>>12&63|128),r.push(o>>6&63|128),r.push(63&o|128)):r.push(239,191,189)}return new Uint8Array(r).buffer}(t)),this.data=new Uint8Array(t)}W.getBitsLength=function(t){return 8*t},W.prototype.getLength=function(){return this.data.length},W.prototype.getBitsLength=function(){return W.getBitsLength(this.data.length)},W.prototype.write=function(t){for(var r=0,e=this.data.length;r<e;r++)t.put(this.data[r],8)};var G=W;function tt(t){this.mode=K.KANJI,this.data=t}tt.getBitsLength=function(t){return 13*t},tt.prototype.getLength=function(){return this.data.length},tt.prototype.getBitsLength=function(){return tt.getBitsLength(this.data.length)},tt.prototype.write=function(t){var r;for(r=0;r<this.data.length;r++){var e=f(this.data[r]);if(e>=33088&&e<=40956)e-=33088;else{if(!(e>=57408&&e<=60351))throw new Error("Invalid SJIS character: "+this.data[r]+"\nMake sure your charset is UTF-8");e-=49472}e=192*(e>>>8&255)+(255&e),t.put(e,13)}};var rt=tt,et=h((function(t){var r={single_source_shortest_paths:function(t,e,n){var o={},a={};a[e]=0;var i,u,s,f,h,c,g,d=r.PriorityQueue.make();for(d.push(e,0);!d.empty();)for(s in u=(i=d.pop()).value,f=i.cost,h=t[u]||{})h.hasOwnProperty(s)&&(c=f+h[s],g=a[s],(void 0===a[s]||g>c)&&(a[s]=c,d.push(s,c),o[s]=u));if(void 0!==n&&void 0===a[n]){var l=["Could not find a path from ",e," to ",n,"."].join("");throw new Error(l)}return o},extract_shortest_path_from_predecessor_list:function(t,r){for(var e=[],n=r;n;)e.push(n),n=t[n];return e.reverse(),e},find_path:function(t,e,n){var o=r.single_source_shortest_paths(t,e,n);return r.extract_shortest_path_from_predecessor_list(o,n)},PriorityQueue:{make:function(t){var e,n=r.PriorityQueue,o={};for(e in t=t||{},n)n.hasOwnProperty(e)&&(o[e]=n[e]);return o.queue=[],o.sorter=t.sorter||n.default_sorter,o},default_sorter:function(t,r){return t.cost-r.cost},push:function(t,r){var e={value:t,cost:r};this.queue.push(e),this.queue.sort(this.sorter)},pop:function(){return this.queue.shift()},empty:function(){return 0===this.queue.length}}};t.exports=r})),nt=h((function(t,r){function e(t){return unescape(encodeURIComponent(t)).length}function n(t,r,e){for(var n,o=[];null!==(n=t.exec(e));)o.push({data:n[0],index:n.index,mode:r,length:n[0].length});return o}function o(t){var r,e,o=n(J.NUMERIC,K.NUMERIC,t),a=n(J.ALPHANUMERIC,K.ALPHANUMERIC,t);return s()?(r=n(J.BYTE,K.BYTE,t),e=n(J.KANJI,K.KANJI,t)):(r=n(J.BYTE_KANJI,K.BYTE,t),e=[]),o.concat(a,r,e).sort((function(t,r){return t.index-r.index})).map((function(t){return{data:t.data,mode:t.mode,length:t.length}}))}function a(t,r){switch(r){case K.NUMERIC:return j.getBitsLength(t);case K.ALPHANUMERIC:return Z.getBitsLength(t);case K.KANJI:return rt.getBitsLength(t);case K.BYTE:return G.getBitsLength(t)}}function i(t,r){var e,n=K.getBestModeForData(t);if((e=K.from(r,n))!==K.BYTE&&e.bit<n.bit)throw new Error('"'+t+'" cannot be encoded with mode '+K.toString(e)+".\n Suggested mode is: "+K.toString(n));switch(e!==K.KANJI||s()||(e=K.BYTE),e){case K.NUMERIC:return new j(t);case K.ALPHANUMERIC:return new Z(t);case K.KANJI:return new rt(t);case K.BYTE:return new G(t)}}r.fromArray=function(t){return t.reduce((function(t,r){return"string"==typeof r?t.push(i(r,null)):r.data&&t.push(i(r.data,r.mode)),t}),[])},r.fromString=function(t,n){for(var i=function(t,r){for(var e={},n={start:{}},o=["start"],i=0;i<t.length;i++){for(var u=t[i],s=[],f=0;f<u.length;f++){var h=u[f],c=""+i+f;s.push(c),e[c]={node:h,lastCount:0},n[c]={};for(var g=0;g<o.length;g++){var d=o[g];e[d]&&e[d].node.mode===h.mode?(n[d][c]=a(e[d].lastCount+h.length,h.mode)-a(e[d].lastCount,h.mode),e[d].lastCount+=h.length):(e[d]&&(e[d].lastCount=h.length),n[d][c]=a(h.length,h.mode)+4+K.getCharCountIndicator(h.mode,r))}}o=s}for(var l=0;l<o.length;l++)n[o[l]].end=0;return{map:n,table:e}}(function(t){for(var r=[],n=0;n<t.length;n++){var o=t[n];switch(o.mode){case K.NUMERIC:r.push([o,{data:o.data,mode:K.ALPHANUMERIC,length:o.length},{data:o.data,mode:K.BYTE,length:o.length}]);break;case K.ALPHANUMERIC:r.push([o,{data:o.data,mode:K.BYTE,length:o.length}]);break;case K.KANJI:r.push([o,{data:o.data,mode:K.BYTE,length:e(o.data)}]);break;case K.BYTE:r.push([{data:o.data,mode:K.BYTE,length:e(o.data)}])}}return r}(o(t)),n),u=et.find_path(i.map,"start","end"),s=[],f=1;f<u.length-1;f++)s.push(i.table[u[f]].node);return r.fromArray(function(t){return t.reduce((function(t,r){var e=t.length-1>=0?t[t.length-1]:null;return e&&e.mode===r.mode?(t[t.length-1].data+=r.data,t):(t.push(r),t)}),[])}(s))},r.rawSplit=function(t){return r.fromArray(o(t))}}));function ot(t,r,e){var n,o,a=t.size,i=V(r,e);for(n=0;n<15;n++)o=1==(i>>n&1),n<6?t.set(n,8,o,!0):n<8?t.set(n+1,8,o,!0):t.set(a-15+n,8,o,!0),n<8?t.set(8,a-n-1,o,!0):n<9?t.set(8,15-n-1+1,o,!0):t.set(8,15-n-1,o,!0);t.set(a-8,8,1,!0)}function at(t,r,e){var n=new d;e.forEach((function(r){n.put(r.mode.bit,4),n.put(r.getLength(),K.getCharCountIndicator(r.mode,t)),r.write(n)}));var o=8*(a(t)-M(t,r));for(n.getLengthInBits()+4<=o&&n.put(0,4);n.getLengthInBits()%8!=0;)n.putBit(0);for(var i=(o-n.getLengthInBits())/8,u=0;u<i;u++)n.put(u%2?17:236,8);return function(t,r,e){for(var n=a(r),o=M(r,e),i=n-o,u=I(r,e),s=u-n%u,f=Math.floor(n/u),h=Math.floor(i/u),c=h+1,g=f-h,d=new L(g),l=0,v=new Array(u),p=new Array(u),w=0,m=new Uint8Array(t.buffer),E=0;E<u;E++){var y=E<s?h:c;v[E]=m.slice(l,l+y),p[E]=d.encode(v[E]),l+=y,w=Math.max(w,y)}var A,N,B=new Uint8Array(n),C=0;for(A=0;A<w;A++)for(N=0;N<u;N++)A<v[N].length&&(B[C++]=v[N][A]);for(A=0;A<g;A++)for(N=0;N<u;N++)B[C++]=p[N][A];return B}(n,t,r)}function it(t,r,e,n){var a;if(Array.isArray(t))a=nt.fromArray(t);else{if("string"!=typeof t)throw new Error("Invalid data");var i=r;if(!i){var u=nt.rawSplit(t);i=O.getBestVersionForData(u,e)}a=nt.fromString(t,i||40)}var s=O.getBestVersionForData(a,e);if(!s)throw new Error("The amount of data is too big to be stored in a QR Code");if(r){if(r<s)throw new Error("\nThe chosen QR Code version cannot contain this amount of data.\nMinimum version required to store current data is: "+s+".\n")}else r=s;var f=at(r,e,a),h=o(r),c=new v(h);return function(t,r){for(var e=t.size,n=m(r),o=0;o<n.length;o++)for(var a=n[o][0],i=n[o][1],u=-1;u<=7;u++)if(!(a+u<=-1||e<=a+u))for(var s=-1;s<=7;s++)i+s<=-1||e<=i+s||(u>=0&&u<=6&&(0===s||6===s)||s>=0&&s<=6&&(0===u||6===u)||u>=2&&u<=4&&s>=2&&s<=4?t.set(a+u,i+s,!0,!0):t.set(a+u,i+s,!1,!0))}(c,r),function(t){for(var r=t.size,e=8;e<r-8;e++){var n=e%2==0;t.set(e,6,n,!0),t.set(6,e,n,!0)}}(c),function(t,r){for(var e=p.getPositions(r),n=0;n<e.length;n++)for(var o=e[n][0],a=e[n][1],i=-2;i<=2;i++)for(var u=-2;u<=2;u++)-2===i||2===i||-2===u||2===u||0===i&&0===u?t.set(o+i,a+u,!0,!0):t.set(o+i,a+u,!1,!0)}(c,r),ot(c,e,0),r>=7&&function(t,r){for(var e,n,o,a=t.size,i=O.getEncodedBits(r),u=0;u<18;u++)e=Math.floor(u/3),n=u%3+a-8-3,o=1==(i>>u&1),t.set(e,n,o,!0),t.set(n,e,o,!0)}(c,r),function(t,r){for(var e=t.size,n=-1,o=e-1,a=7,i=0,u=e-1;u>0;u-=2)for(6===u&&u--;;){for(var s=0;s<2;s++)if(!t.isReserved(o,u-s)){var f=!1;i<r.length&&(f=1==(r[i]>>>a&1)),t.set(o,u-s,f),-1===--a&&(i++,a=7)}if((o+=n)<0||e<=o){o-=n,n=-n;break}}}(c,f),isNaN(n)&&(n=E.getBestMask(c,ot.bind(null,c,e))),E.applyMask(n,c),ot(c,e,n),{modules:c,version:r,errorCorrectionLevel:e,maskPattern:n,segments:a}}nt.fromArray,nt.fromString,nt.rawSplit;var ut=function(t,r){if(void 0===t||""===t)throw new Error("No input text");var e,n,o=c.M;return void 0!==r&&(o=c.from(r.errorCorrectionLevel,c.M),e=O.from(r.version),n=E.from(r.maskPattern),r.toSJISFunc&&u(r.toSJISFunc)),it(t,e,o,n)},st=h((function(t,r){function e(t){if("number"==typeof t&&(t=t.toString()),"string"!=typeof t)throw new Error("Color should be defined as hex string");var r=t.slice().replace("#","").split("");if(r.length<3||5===r.length||r.length>8)throw new Error("Invalid hex color: "+t);3!==r.length&&4!==r.length||(r=Array.prototype.concat.apply([],r.map((function(t){return[t,t]})))),6===r.length&&r.push("F","F");var e=parseInt(r.join(""),16);return{r:e>>24&255,g:e>>16&255,b:e>>8&255,a:255&e,hex:"#"+r.slice(0,6).join("")}}r.getOptions=function(t){t||(t={}),t.color||(t.color={});var r=void 0===t.margin||null===t.margin||t.margin<0?4:t.margin,n=t.width&&t.width>=21?t.width:void 0,o=t.scale||4;return{width:n,scale:n?4:o,margin:r,color:{dark:e(t.color.dark||"#000000ff"),light:e(t.color.light||"#ffffffff")},type:t.type,rendererOpts:t.rendererOpts||{}}},r.getScale=function(t,r){return r.width&&r.width>=t+2*r.margin?r.width/(t+2*r.margin):r.scale},r.getImageWidth=function(t,e){var n=r.getScale(t,e);return Math.floor((t+2*e.margin)*n)},r.qrToImageData=function(t,e,n){for(var o=e.modules.size,a=e.modules.data,i=r.getScale(o,n),u=Math.floor((o+2*n.margin)*i),s=n.margin*i,f=[n.color.light,n.color.dark],h=0;h<u;h++)for(var c=0;c<u;c++){var g=4*(h*u+c),d=n.color.light;if(h>=s&&c>=s&&h<u-s&&c<u-s)d=f[a[Math.floor((h-s)/i)*o+Math.floor((c-s)/i)]?1:0];t[g++]=d.r,t[g++]=d.g,t[g++]=d.b,t[g]=d.a}}}));st.getOptions,st.getScale,st.getImageWidth,st.qrToImageData;var ft=h((function(t,r){r.render=function(t,r,e){var n=e,o=r;void 0!==n||r&&r.getContext||(n=r,r=void 0),r||(o=function(){try{return document.createElement("canvas")}catch(t){throw new Error("You need to specify a canvas element")}}()),n=st.getOptions(n);var a=st.getImageWidth(t.modules.size,n),i=o.getContext("2d"),u=i.createImageData(a,a);return st.qrToImageData(u.data,t,n),function(t,r,e){t.clearRect(0,0,r.width,r.height),r.style||(r.style={}),r.height=e,r.width=e,r.style.height=e+"px",r.style.width=e+"px"}(i,o,a),i.putImageData(u,0,0),o},r.renderToDataURL=function(t,e,n){var o=n;void 0!==o||e&&e.getContext||(o=e,e=void 0),o||(o={});var a=r.render(t,e,o),i=o.type||"image/png",u=o.rendererOpts||{};return a.toDataURL(i,u.quality)}}));function ht(t,r){var e=t.a/255,n=r+'="'+t.hex+'"';return e<1?n+" "+r+'-opacity="'+e.toFixed(2).slice(1)+'"':n}function ct(t,r,e){var n=t+r;return void 0!==e&&(n+=" "+e),n}ft.render,ft.renderToDataURL;var gt=function(t,r,e){var n=st.getOptions(r),o=t.modules.size,a=t.modules.data,i=o+2*n.margin,u=n.color.light.a?"<path "+ht(n.color.light,"fill")+' d="M0 0h'+i+"v"+i+'H0z"/>':"",s="<path "+ht(n.color.dark,"stroke")+' d="'+function(t,r,e){for(var n="",o=0,a=!1,i=0,u=0;u<t.length;u++){var s=Math.floor(u%r),f=Math.floor(u/r);s||a||(a=!0),t[u]?(i++,u>0&&s>0&&t[u-1]||(n+=a?ct("M",s+e,.5+f+e):ct("m",o,0),o=0,a=!1),s+1<r&&t[u+1]||(n+=ct("h",i),i=0)):o++}return n}(a,o,n.margin)+'"/>',f='viewBox="0 0 '+i+" "+i+'"',h='<svg xmlns="http://www.w3.org/2000/svg" '+(n.width?'width="'+n.width+'" height="'+n.width+'" ':"")+f+' shape-rendering="crispEdges">'+u+s+"</svg>\n";return"function"==typeof e&&e(null,h),h};function dt(t,r,n,o,a){var i=[].slice.call(arguments,1),u=i.length,s="function"==typeof i[u-1];if(!s&&!e())throw new Error("Callback required as last argument");if(!s){if(u<1)throw new Error("Too few arguments provided");return 1===u?(n=r,r=o=void 0):2!==u||r.getContext||(o=n,n=r,r=void 0),new Promise((function(e,a){try{var i=ut(n,o);e(t(i,r,o))}catch(t){a(t)}}))}if(u<2)throw new Error("Too few arguments provided");2===u?(a=n,n=r,r=o=void 0):3===u&&(r.getContext&&void 0===a?(a=o,o=void 0):(a=o,o=n,n=r,r=void 0));try{var f=ut(n,o);a(null,t(f,r,o))}catch(t){a(t)}}var lt=ut,vt=dt.bind(null,ft.render),pt=dt.bind(null,ft.renderToDataURL),wt=dt.bind(null,(function(t,r,e){return gt(t,e)})),mt={create:lt,toCanvas:vt,toDataURL:pt,toString:wt};return t.create=lt,t.default=mt,t.toCanvas=vt,t.toDataURL=pt,t.toString=wt,Object.defineProperty(t,"__esModule",{value:!0}),t}({});
+    </script>
+    <script>
+        /**
+         * @param {ArrayBuffer} src
+         * @returns string
+         */
+        const arrayBufferToBase64 = (src) => {
+            var base64 = '';
+            var encodings =
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+            var bytes = new Uint8Array(src);
+            var byteLength = bytes.byteLength;
+            var byteRemainder = byteLength % 3;
+            var mainLength = byteLength - byteRemainder;
+
+            var a, b, c, d;
+            var chunk;
+
+            // Main loop deals with bytes in chunks of 3
+            for (var i = 0; i < mainLength; i = i + 3) {
+                // Combine the three bytes into a single integer
+                chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
+
+                // Use bitmasks to extract 6-bit segments from the triplet
+                a = (chunk & 16515072) >> 18; // 16515072 = (2^6 - 1) << 18
+                b = (chunk & 258048) >> 12; // 258048   = (2^6 - 1) << 12
+                c = (chunk & 4032) >> 6; // 4032     = (2^6 - 1) << 6
+                d = chunk & 63; // 63       = 2^6 - 1
+
+                // Convert the raw binary segments to the appropriate ASCII encoding
+                base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d];
+            }
+
+            // Deal with the remaining bytes and padding
+            if (byteRemainder == 1) {
+                chunk = bytes[mainLength];
+
+                a = (chunk & 252) >> 2; // 252 = (2^6 - 1) << 2
+
+                // Set the 4 least significant bits to zero
+                b = (chunk & 3) << 4; // 3   = 2^2 - 1
+
+                base64 += encodings[a] + encodings[b] + '==';
+            } else if (byteRemainder == 2) {
+                chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1];
+
+                a = (chunk & 64512) >> 10; // 64512 = (2^6 - 1) << 10
+                b = (chunk & 1008) >> 4; // 1008  = (2^6 - 1) << 4
+
+                // Set the 2 least significant bits to zero
+                c = (chunk & 15) << 2; // 15    = 2^4 - 1
+
+                base64 += encodings[a] + encodings[b] + encodings[c] + '=';
+            }
+
+            return base64;
+        };
+
+        /**
+         * @param {string} src
+         * @return {ArrayBuffer}
+         */
+        const base64ToArrayBuffer = (src) => {
+            const raw = atob(src);
+
+            const bytes = Uint8Array.from(
+                raw.split('').map((char) => char.charCodeAt(0)),
+            );
+
+            return bytes.buffer;
+        };
+
+
+        /**
+         * @param {ReadableStream} stream
+         * @returns {Promise<ArrayBuffer>}
+         */
+        const readableStreamToArrayBuffer = async (
+            stream
+        ) => {
+            const reader = stream.getReader();
+
+            let result = null;
+
+            let red;
+            do {
+                red = await reader.read();
+                if (red.value) {
+                    if (!result) result = red.value;
+                    else {
+                        const merged = new Uint8Array(
+                            result.byteLength + red.value.byteLength,
+                        );
+                        merged.set(result, 0);
+                        merged.set(red.value, result.byteLength);
+
+                        result = merged;
+                    }
+                }
+            } while (!red.done);
+
+            if (!result) throw new Error('Failed to read');
+
+            return result.buffer;
+        };
+
+
+        /**
+         * @param {ArrayBuffer} stream
+         * @returns {ReadableStream}
+         */
+        const arrayBufferToReadableStream = (src) =>
+            new ReadableStream({
+                start(controller) {
+                    controller.enqueue(new Uint8Array(src));
+                    controller.close();
+                },
+            });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <form id="start" class="modal" onsubmit="app.join(event)">
+            <h2>Room</h2>
+            <input id="code-input" class="input" placeholder="Room code" />
+            <div class="buttons">
+                <button class="button" type="submit">Join</button>
+                <button class="button" type="button" onclick="app.createRoom(event)">Create</button>
+            </div>
+            <div class="other-options modal">
+                <button class="button" type="button" onclick="app.startLocal()">Start local multiplayer game</button>
+                <button class="button" type="button" onclick="app.setStage('p2p')">Peer-to-peer game</button>
+                <button class="button" type="button" onclick="app.download()">Download</button>
+            </div>
+        </form>
+        <div id="loading" style="display: none;">
+            Loading...
+        </div>
+        <div id="waiting" class="modal" style="display: none;">
+            <h2>Room Code</h2>
+            <div id="code"></div>
+            <div class="text">Send it to your friend</div>
+            <button class="button" style="width: 100%; margin-top: 10px;" onclick="app.cancelRoom()">Cancel</button>
+        </div>
+        <div id="finished" class="modal" style="display: none;">
+            <div id="finish-message" class="text"></div>
+            <button class="button" style="width: 100%; margin-top: 10px;" onclick="app.reset()">Ok</button>
+        </div>
+        <div id="p2p" class="modal" style="display: none;">
+            <h2>Peer-to-peer</h2>
+            <div class="buttons" style="margin-top: 0;">
+                <button class="button" type="submit" onclick="app.initP2P()">Create room</button>
+                <button class="button" type="button" onclick="app.setStage('p2p-join')">Join room</button>
+            </div>
+            <button class="button" style="width: 100%; margin-top: 10px;" onclick="app.setStage('start')">Cancel</button>
+        </div>
+        <div id="p2p-wait" style="display: none;" class="p2p-description">
+            <h2 style="color: white; text-align: center;">Scan this QR-code to copy the key</h2>
+            <img class="p2p-qr" id="qr-offer" />
+            <div class="text" style="color: white; margin: 10px 0;">Or send this key to your friend</div>
+            <textarea class="p2p-base64" id="base64-offer" readonly></textarea>
+            <div class="buttons">
+                <button class="button" style="width: 100%; padding: 10px 0" onclick="app.setStage('p2p-join')">Enter code</button>
+                <button class="button" style="width: 100%; padding: 10px 0" onclick="app.cancelP2P()">Cancel</button>
+            </div>
+        </div>
+        <form 
+            id="p2p-join" 
+            class="modal" 
+            style="display: none;" 
+            onsubmit="app.p2pStage === 'host-waiting-answer' ? app.handleAnswer(event) : app.joinP2P(event)"
+        >
+            <h2>Enter the key</h2>
+            <textarea id="p2p-offer"></textarea>
+            <div class="buttons">
+                <button class="button" type="submit">Join</button>
+                <button class="button" type="button" onclick="app.cancelP2P()">Cancel</button>
+            </div>
+        </form>
+        <div id="p2p-answer" style="display: none;" class="p2p-description">
+            <h2 style="color: white; text-align: center;">Scan this QR-code to copy the key</h2>
+            <img class="p2p-qr" id="qr-answer" />
+            <div class="text" style="color: white; margin: 10px 0;">Or send this key to your friend</div>
+            <textarea class="p2p-base64" id="base64-answer" readonly></textarea>
+            <button class="button" style="width: 100%; margin-top: 20px; padding: 10px 0" onclick="app.cancelP2P()">Cancel</button>
+        </div>
+        <div id="p2p-ready-to-start" class="modal" style="display: none;">
+            <h2 style="color: white; text-align: center;">Everything is ready</h2>
+            <button class="button" style="width: 100%;" onclick="app.startP2PGame()">Start game</button>
+            <button class="button" style="width: 100%; margin-top: 10px;" onclick="app.cancelP2P()">Exit</button>
+        </div>
+        <div id="p2p-waiting-for-host" class="modal" style="display: none;">
+            <h2 style="color: white; text-align: center;">Everything is ready</h2>
+            <div class="text" style="margin: 0;">Waiting for the host to start the game</div>
+            <button class="button" style="width: 100%; margin-top: 10px;" onclick="app.cancelP2P()">Exit</button>
+        </div>
+        <div id="game-window" style="position: relative; display: none;">
+            <div class="game-container">
+                <div class="score">
+                    <div id="first-score">0</div>
+                    <div id="second-score">0</div>
+                </div>
+                <canvas id="root"></canvas>
+                <div id="ping">
+                    Ping: <span id="ping-display"></span>ms
+                </div>
+                <div class="control-buttons">
+                    <button id="up-btn">UP</button>
+                    <button id="down-btn">DOWN</button>
+                </div>
+                <button class="exit-button" onclick="app.exitGame()">Exit</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        
+        const gridSize = 400;
+
+        const playerHeight = 50;
+        const playerWidth = 10;
+        const playerSpeed = 210;
+
+        const ballSize = 20;
+        // const ballSpeed = 0;
+        const ballSpeed = 200;
+
+        const serverAddress = "/connect";
+
+        const iceServers = [
+            { urls: "stun:stun.l.google.com:19302" },
+            { urls: "stun:stun1.l.google.com:19302" },
+            { urls: "stun:stun2.l.google.com:19302" },
+            { urls: "stun:stun3.l.google.com:19302" },
+            { urls: "stun:stun4.l.google.com:19302" },
+        ];
+
+        /**
+         * @typedef Vector
+         * @property {number} x
+         * @property {number} y 
+         */
+
+        /**
+         * @param {Vector} vector
+         * @return {number}
+         */
+        const vectorLength = (vector) => {
+            return Math.hypot(vector.x, vector.y);
+        }
+
+        /**
+         * @param {Vector} vector
+         * @return {Vector}
+         */
+        const normalize = (vector) => {
+            const length = vectorLength(vector);
+
+            return {
+                x: vector.x / length,
+                y: vector.y / length
+            }
+        }
+
+        /**
+         * @param {number} min
+         * @param {number} value
+         * @param {number} max
+         * @return {number}
+         */
+        const clamp = (min, value, max) => Math.max(min, Math.min(value, max));
+
+        /**
+         * @typedef Rect 
+         * @property {number} x
+         * @property {number} y
+         * @property {number} w
+         * @property {number} h
+         */
+
+        /**
+         * @param {Rect} first
+         * @param {Rect} second
+         * @return {?Rect}
+         */
+        const rectIntersection = (first, second) => {
+            if(first.x + first.w < second.x) {
+                return null;
+            }
+
+            if(second.x + second.w < first.x) {
+                return null;
+            }
+            
+            if(first.y + first.h < second.y) {
+                return null;
+            }
+
+            if(second.y + second.h < first.y) {
+                return null;
+            }
+            
+            return {
+                x: second.x,
+                y: second.y,
+                w: first.w - second.x + first.x,
+                h: first.h - second.y + first.y,
+            };
+        }
+
+        /**
+         * @typedef Subscription
+         * @property {() => void} unsubscribe
+         */
+
+        /** 
+         * @template T
+         * @typedef {(data: T) => void} ObservableCB
+         */
+
+        /** @template T
+         * @typedef ObservableType
+         * @property {(cb: ObservableCB<T>) => Subscription} subscribe
+         */
+
+        /** 
+         * @template T
+         * @implements ObservableType<T>
+         */
+        class Observable {
+            /**
+             * @private
+             * @type {Set<(next: T) => void>}
+             */
+            listeners = new Set();
+
+            /**
+             * @param {(next: T) => void} cb
+             */
+            subscribe(cb) {
+                this.listeners.add(cb);
+
+                return {
+                    unsubscribe: () => this.listeners.delete(cb)
+                }
+            }
+
+            /**
+             * @protected
+             * @param {T} event
+             */
+            sendUpdate(event) {
+                this.listeners.forEach(cb => cb(event));
+            }
+        }
+
+        /**
+         * @typedef GameStateData
+         * @property {number} first
+         * @property {number} second
+         * @property {Vector} ball
+         * @property {number} firstScore 
+         * @property {number} secondScore
+         * @property {number} firstDirection
+         * @property {number} secondDirection
+         * @property {Vector} ballVelocity
+         * 
+         * @extends Observable<GameStateData & { type: "state" }>
+         */
+        class GameModel extends Observable {
+            /** @private */ firstPlayerY = (gridSize - playerHeight) / 2;
+            /** @private */ firstPlayerDirection = 0;
+            /** @private */ firstScore = 0;
+
+            /** @private */ secondPlayerY = (gridSize - playerHeight) / 2;
+            /** @private */ secondPlayerDirection = 0;
+            /** @private */ secondScore = 0;
+
+            /** @private */ tps = 20;
+            /** @private */ targetDuration = 1000 / 20;
+
+            /** @private @type {Vector} */
+            ballPos;
+
+            /** @private @type {Vector} */
+            ballVelocity;
+
+            constructor(tps = 20) {
+                super();
+
+                this.tps = tps;
+                this.targetDuration = 1000 / this.tps;
+
+                this.resetGrid();
+            }
+            
+            start() {
+                this.scheduleUpdate(this.targetDuration);
+            }
+
+            stop() {
+                if(this.timeout) clearTimeout(this.timeout);
+            }
+
+            setFirstPlayerDirection(mv) {
+                this.firstPlayerDirection = mv;
+            }
+
+            setSecondPlayerDirection(mv) {
+                this.secondPlayerDirection = mv;
+            }
+            
+            /** 
+             * @private 
+             * @param {number} timeout
+             */
+            scheduleUpdate(timeout) {
+                if(this.timeout) clearTimeout(this.timeout);
+
+                this.timeout = setTimeout(() => {
+                    const start = Date.now();
+
+                    this.calcState(this.targetDuration / 1000);
+
+                    this.sendUpdate({
+                        type: "state",
+                        first: this.firstPlayerY,
+                        second: this.secondPlayerY,
+                        ball: this.ballPos,
+                        firstScore: this.firstScore,
+                        secondScore: this.secondScore,
+                        firstDirection: this.firstPlayerDirection,
+                        secondDirection: this.secondPlayerDirection,
+                        ballVelocity: this.ballVelocity
+                    })
+
+                    const duration = Date.now() - start;
+
+                    if(duration < this.targetDuration) {
+                        this.scheduleUpdate(this.targetDuration - duration);
+                    } else {
+                        this.scheduleUpdate(0);
+                    }
+
+                }, timeout)
+            }
+
+            /**
+             * @private
+             * @param {number} deltaTime
+             */
+            calcState(deltaTime) {
+                this.ballPos.x += this.ballVelocity.x * deltaTime;
+                this.ballPos.y += this.ballVelocity.y * deltaTime;
+                
+                this.firstPlayerY = clamp(0, this.firstPlayerY + playerSpeed * this.firstPlayerDirection * deltaTime, gridSize - playerHeight);
+                this.secondPlayerY = clamp(0, this.secondPlayerY + playerSpeed * this.secondPlayerDirection * deltaTime, gridSize - playerHeight);
+
+
+                if(this.ballPos.x <= 0) {
+                    this.resetGrid();
+                    this.secondScore++;
+
+                    return;
+                }
+
+                if(this.ballPos.x + ballSize >= gridSize) {
+                    this.resetGrid();
+                    this.firstScore++;
+                }
+
+                const firstIntersection = rectIntersection(
+                    {
+                        x: 0,
+                        y: this.firstPlayerY,
+                        w: playerWidth,
+                        h: playerHeight
+                    },
+                    {
+                        x: this.ballPos.x,
+                        y: this.ballPos.y,
+                        w: ballSize,
+                        h: ballSize
+                    }
+                )
+
+                if(firstIntersection) {
+                    this.ballPos.x += firstIntersection.w;
+                    this.ballVelocity.x *= -1;
+                }
+
+
+                const secondIntersection = rectIntersection(
+                    {
+                        x: this.ballPos.x,
+                        y: this.ballPos.y,
+                        w: ballSize,
+                        h: ballSize
+                    },
+                    {
+                        x: gridSize - playerWidth,
+                        y: this.secondPlayerY,
+                        w: playerWidth,
+                        h: playerHeight
+                    }
+                )
+
+                if(secondIntersection) {
+                    this.ballPos.x -= secondIntersection.w;
+                    this.ballVelocity.x *= -1;
+                }
+
+
+                if(this.ballPos.y <= 0) {
+                    this.ballPos.y = 0;
+                    this.ballVelocity.y *= -1;
+                }
+
+                if(this.ballPos.y + ballSize >= gridSize) {
+                    this.ballPos.y = gridSize - ballSize;
+                    this.ballVelocity.y *= -1;
+                }
+            }
+
+            /** @private */
+            resetGrid() {
+                this.ballPos = { x: (gridSize - ballSize) / 2, y: (gridSize - ballSize) / 2 };
+
+                do {
+                    this.ballVelocity = normalize({ x: (Math.random() * 2 - 1), y: (Math.random() * 2 - 1) })
+                } while(Math.abs(this.ballVelocity.x) < .3)
+
+                this.ballVelocity.x *= ballSpeed;
+                this.ballVelocity.y *= ballSpeed;
+                
+                this.firstPlayerY = (gridSize - playerHeight) / 2;
+                this.secondPlayerY = (gridSize - playerHeight) / 2;
+            }
+        }
+
+        /**
+         * @extends Observable<{ type: "player-direction", direction: number} | { type: "secondary-direction", direction: number}>
+         */
+        class GameView extends Observable {
+            static DISPLAY_ACTUAL = false;
+
+            /**
+             * @private
+             * @type {HTMLCanvasElement}
+             */
+            canvas = document.getElementById("root");
+            
+            /** @private */ ctx = this.canvas.getContext("2d");
+            /** @private */ pingBox = document.getElementById("ping");
+            /** @private */ pingDisplay = document.getElementById("ping-display");
+
+            /** @private */ upBtn = document.getElementById("up-btn");
+            /** @private */ downBtn = document.getElementById("down-btn");
+
+            /** @private */ size = gridSize * window.devicePixelRatio;
+            /** @private */ playerWidth = playerWidth * window.devicePixelRatio;
+            /** @private */ playerHeight = playerHeight * window.devicePixelRatio;
+            /** @private */ ballSize = ballSize * window.devicePixelRatio;
+            /** @private */ playerSpeed = playerSpeed * window.devicePixelRatio;
+
+            /** @private @type {GameStateData} */
+            state = {
+                ball: {
+                    x: (this.size - this.ballSize) / 2,
+                    y: (this.size - this.ballSize) / 2
+                },
+                ballVelocity: { x: 0, y: 0 },
+
+                first: (this.size - this.playerHeight) / 2,
+                firstDirection: 0,
+
+                second: (this.size - this.playerHeight) / 2,
+                secondDirection: 0,
+
+                firstScore: 0,
+                secondScore: 0
+            }
+
+            /** @private */ actual = {
+                first: (this.size - this.playerHeight) / 2,
+                second: (this.size - this.playerHeight) / 2,
+            }
+
+            /** @private */ buttonState = {
+                "w": false,
+                "s": false,
+                "up": false,
+                "down": false
+            };
+
+            /** @private */ prevDirection = 0;
+            /** @private */ prevSecondaryDirection = 0;
+
+            /** @private @type {?number} */ frame = null;
+            /** @private @type {?number} */ prevTimestamp = null;
+
+            constructor() {
+                super();
+
+                this.pingBox.style.display = "none";
+                
+                this.canvas.width = gridSize * window.devicePixelRatio;
+                this.canvas.height = gridSize * window.devicePixelRatio;
+
+                this.canvas.style.width = gridSize + "px"
+                this.canvas.style.height = gridSize + "px"
+
+                /**
+                 * @private
+                 * @param {KeyboardEvent} e
+                 */
+                this.keyDown = (e) => {
+                    switch(e.code) {
+                        case "KeyW":
+                            this.buttonState.w = true;
+                            break;
+
+                        case "KeyS":
+                            this.buttonState.s = true;
+                            break;
+
+                        case "ArrowUp":
+                            this.buttonState.up = true;
+                            break
+
+                        case "ArrowDown":
+                            this.buttonState.down = true;
+                            break
+                    }
+
+                    this.updatePlayerDirection();
+                };
+
+                /**
+                 * @private
+                 * @param {KeyboardEvent} e
+                 */
+                this.keyUp = (e) => {
+                    switch(e.code) {
+                        case "KeyW":
+                            this.buttonState.w = false;
+                            break;
+
+                        case "KeyS":
+                            this.buttonState.s = false;
+                            break;
+
+                        case "ArrowUp":
+                            this.buttonState.up = false;
+                            break
+
+                        case "ArrowDown":
+                            this.buttonState.down = false;
+                            break
+                    }
+
+                    this.updatePlayerDirection();
+                };
+
+                /** @private */
+                this.upBtnDown = () => {
+                    this.buttonState.w = true;
+                    this.updatePlayerDirection();
+                }
+
+                /** @private */
+                this.upBtnUp = () => {
+                    this.buttonState.w = false;
+                    this.updatePlayerDirection();
+                }
+
+                /** @private */
+                this.downBtnDown = () => {
+                    this.buttonState.s = true;
+                    this.updatePlayerDirection();
+                }
+
+                /** @private */
+                this.downBtnUp = () => {
+                    this.buttonState.s = false;
+                    this.updatePlayerDirection();
+                }
+            }
+
+            start() {
+                window.addEventListener("keydown", this.keyDown);
+                window.addEventListener("keyup", this.keyUp);
+
+                this.upBtn.addEventListener("touchstart", this.upBtnDown);
+                this.upBtn.addEventListener("touchend", this.upBtnUp);
+
+                this.downBtn.addEventListener("touchstart", this.downBtnDown);
+                this.downBtn.addEventListener("touchend", this.downBtnUp);
+
+                this.draw(0);
+            }
+
+            stop() {
+                window.removeEventListener("keydown", this.keyDown);
+                window.removeEventListener("keyup", this.keyUp);
+                this.frame && cancelAnimationFrame(this.frame)
+
+                this.upBtn.removeEventListener("touchstart", this.upBtnDown);
+                this.upBtn.removeEventListener("touchend", this.upBtnUp);
+
+                this.downBtn.removeEventListener("touchstart", this.downBtnDown);
+                this.downBtn.removeEventListener("touchend", this.downBtnUp);
+            }
+
+            /**
+             * @param {number} ping
+             */
+            displayPing(ping) {
+                this.pingBox.style.display = "unset";
+                this.pingDisplay.innerText = ping + "";
+            }
+
+            /** @param {Partial<GameStateData>} update */
+            setState(update) {
+                const nextState = Object.assign({}, this.state, update);
+
+                if("first" in update) {
+                    this.actual.first = nextState.first * window.devicePixelRatio;
+                    nextState.first = this.state.first;
+                }
+                if("second" in update) {
+                    this.actual.second = nextState.second * window.devicePixelRatio;
+                    nextState.second = this.state.second;
+                }
+
+                if("ball" in update) {
+                    nextState.ball = Object.assign({}, nextState.ball);
+                    nextState.ball.x *= window.devicePixelRatio;
+                    nextState.ball.y *= window.devicePixelRatio;
+                }
+
+                if("ballVelocity" in update) {
+                    nextState.ballVelocity = Object.assign({}, nextState.ballVelocity);
+                    nextState.ballVelocity.x *= window.devicePixelRatio;
+                    nextState.ballVelocity.y *= window.devicePixelRatio;
+                }
+
+                if(nextState.firstScore !== this.state.firstScore) {
+                    document.getElementById("first-score").innerText = nextState.firstScore;
+                }
+
+                if(nextState.secondScore !== this.state.secondScore) {
+                    document.getElementById("second-score").innerText = nextState.secondScore;
+                }
+
+                this.state = nextState;
+            }
+
+            /**
+             * @private 
+             * @param {number} timestamp
+             * */
+            draw(timestamp) {
+                if(this.frame) cancelAnimationFrame(this.frame);
+
+                if(this.prevTimestamp === null) {
+                    this.prevTimestamp = timestamp;
+                }
+
+                const deltaTime = (timestamp - this.prevTimestamp) / 1000;
+                this.prevTimestamp = timestamp;
+
+                this.state.first = clamp(
+                    0,
+                    this.state.first + this.state.firstDirection * deltaTime * this.playerSpeed,
+                    this.size - this.playerHeight
+                );
+                this.state.first += (this.actual.first - this.state.first) / 10;
+
+                this.state.second = clamp(
+                    0,
+                    this.state.second + this.state.secondDirection * deltaTime * this.playerSpeed,
+                    this.size - this.playerHeight
+                );
+                this.state.second += (this.actual.second - this.state.second) / 10;
+
+                this.state.ball.x += this.state.ballVelocity.x * deltaTime;
+                this.state.ball.y += this.state.ballVelocity.y * deltaTime;
+
+                this.ctx.fillStyle = "white";
+                this.ctx.fillRect(0, 0, this.size, this.size);
+
+                if(GameView.DISPLAY_ACTUAL) {
+                    this.ctx.fillStyle = "magenta";
+                    this.ctx.fillRect(0, this.actual.first, this.playerWidth, this.playerHeight);
+                    this.ctx.fillRect(this.size - this.playerWidth, this.actual.second, this.playerWidth, this.playerHeight);
+                }
+
+                this.ctx.fillStyle = "black";
+                this.ctx.fillRect(0, this.state.first, this.playerWidth, this.playerHeight);
+
+                this.ctx.fillRect(this.size - this.playerWidth, this.state.second, this.playerWidth, this.playerHeight);
+                
+                this.ctx.fillRect(this.state.ball.x, this.state.ball.y, this.ballSize, this.ballSize);
+                
+                this.frame = requestAnimationFrame((timestamp) => this.draw(timestamp));
+            }
+
+            /** @private */
+            updatePlayerDirection() {
+                let mainDirection = 0;
+                if(this.buttonState.w) {
+                    mainDirection -= 1;
+                }
+
+                if(this.buttonState.s) {
+                    mainDirection += 1;
+                }
+
+                if(mainDirection != this.prevDirection) {
+                    this.prevDirection = mainDirection;
+
+                    this.sendUpdate({
+                        type: "player-direction",
+                        direction: mainDirection
+                    })
+                }
+
+                let secondaryDirection = 0;
+
+                if(this.buttonState.up) {
+                    secondaryDirection -= 1;
+                }
+
+                if(this.buttonState.down) {
+                    secondaryDirection += 1;
+                }
+
+                if(secondaryDirection != this.prevSecondaryDirection) {
+                    this.prevSecondaryDirection = secondaryDirection;
+
+                    this.sendUpdate({
+                        type: "secondary-direction",
+                        direction: secondaryDirection
+                    })
+                }
+            }
+        }
+
+        class SingleScreenGameController {
+            /**
+             * @param {GameView} view
+             * @param {GameModel} model
+             */
+            constructor(
+                view,
+                model
+            ) {
+                this.view = view;
+                this.model = model;
+            }
+
+            start() {
+                this.modelSub = this.model.subscribe(e => {
+                    switch(e.type) {
+                        case "state":
+                            const update = Object.assign({}, e);
+                            delete e.type;
+                            this.view.setState(update);
+
+                            break;
+                    }
+                });
+
+                this.viewSub = this.view.subscribe(e => {
+                    switch(e.type) {
+                        case "player-direction":
+                            this.view.setState({
+                                firstDirection: e.direction
+                            })
+                            this.model.setFirstPlayerDirection(e.direction);
+                            break;
+
+                        case "secondary-direction":
+                            this.view.setState({
+                                secondDirection: e.direction
+                            })
+                            this.model.setSecondPlayerDirection(e.direction);
+                            break;
+                    }
+                })
+
+                this.model.start();
+                this.view.start();
+            }
+
+            destroy() {
+                this.modelSub.unsubscribe();
+                this.viewSub.unsubscribe();
+
+                this.model.stop();
+                this.view.stop();
+            }
+        }
+
+        const encoder = new TextEncoder();
+        const decoder = new TextDecoder();
+
+        /**
+         * 
+         * @typedef {{ type: "message", data: string }} NetworkMessageEvent
+         * @typedef {{ type: "closed", code: number }} NetworkCloseEvent
+         * @typedef {NetworkMessageEvent | NetworkCloseEvent} NetworkEvent
+         * 
+         * @typedef {ObservableType<NetworkEvent> & {
+         *  send: (data: string) => void,
+         *  destroy: () => void
+         * }} Network
+         * 
+         * @typedef {{ type: "ping" }} PingMessage
+         * @typedef {{ type: "pong" }} PongMessage
+         * @typedef {{ type: "start" }} StartMessage
+         * @typedef {{ type: "ready" }} StartConfirmMessage
+         * @typedef {{ type: "next-state" } & GameStateData} StateMessage
+         * @typedef {{ type: "change-direction", direction: number }} ChangeDirectionMessage
+         * 
+         * @typedef {StartMessage | StateMessage | PongMessage} HostMessage
+         * @typedef {StartConfirmMessage | ChangeDirectionMessage | PingMessage} PlayerMessage
+         * 
+         * @typedef {{ type: "state" } & GameStateData} StateEvent
+         * @typedef {{ type: "finished" }} FinishEvent
+         * @typedef {{ type: "ping", ping: number }} PingEvent
+         * 
+         * @typedef {StateEvent | FinishEvent | PingEvent} RemoteGameEvent
+         */
+
+        /** 
+         * @implements Network
+         * @extends {Observable<NetworkEvent>} 
+         */
+        class WebSocketNetwork extends Observable {
+            /**
+             * @param {WebSocket} ws 
+             */
+            constructor(
+                ws
+            ) {
+                super();
+
+                /** @private */
+                this.ws = ws;
+                this.ws.binaryType = "arraybuffer";
+
+                this.ws.onmessage = (e) => {
+                    this.sendUpdate({
+                        type: "message",
+                        data: decoder.decode(e.data)
+                    });
+                }
+
+                this.ws.onclose = (e) => {
+                    this.sendUpdate({
+                        type: "closed",
+                        code: e.code
+                    })
+
+                    this.destroy();
+                }
+            }
+
+            destroy() {
+                this.ws.close();
+            }
+
+            /**
+             * @param {string} data
+             */
+            send(data) {
+                this.ws.send(encoder.encode(data));
+            }
+        }
+
+        /** 
+         * @implements Network
+         * @extends {Observable<NetworkEvent>} 
+         */
+        class WebRTCNetwork extends Observable {
+            /**
+             * @param {RTCPeerConnection} connection 
+             * @param {RTCDataChannel} channel 
+             */
+            constructor(
+                connection,
+                channel
+            ) {
+                super();
+
+                /** @private */
+                this.connection = connection;
+                /** @private */
+                this.channel = channel;
+
+                this.channel.binaryType = "arraybuffer";
+                this.channel.onmessage = (e) => {
+                    this.sendUpdate({
+                        type: "message",
+                        data: decoder.decode(e.data)
+                    })
+                }
+
+                this.channel.onclose = () => {
+                    this.sendUpdate({
+                        type: "closed",
+                        code: 0
+                    })
+                    this.destroy();
+                }
+            }
+
+            /** @param {string} data  */
+            send(data) {
+                this.channel.send(encoder.encode(data));
+            }
+
+            destroy() {
+                this.channel.close();
+                this.connection.close();
+            }
+        }
+
+        /**
+         * @extends Observable<RemoteGameEvent>
+         */
+        class GameHostModel extends Observable {
+            /**@private */ state = "starting"
+
+            /**@private */ game = new GameModel();
+
+            /**
+             * @param {Network} network
+             */
+            constructor(network) {
+                super();
+
+                /**@private */
+                this.network = network;
+
+                this.gameSub = this.game.subscribe(e => {
+                    this.sendMessage({
+                        ...e,
+                        type: "next-state",
+                    })
+                    this.sendUpdate(e);
+                })
+            }
+
+            start() {
+                this.sendMessage({ type: "start" });
+
+                /** @private @type {Subscription=} */
+                this.networkSub = this.network.subscribe((e) => {
+                    if(e.type === "closed") {
+                        this.sendUpdate({ type: "finished" });
+                        this.destroy();
+
+                        return;
+                    }
+
+                    /**
+                     * @type {PlayerMessage}
+                     */
+                    const message = JSON.parse(e.data);
+
+                    switch(message.type) {
+                        case "ready":
+                            this.state = "game";
+                            this.game.start();
+                            break;
+
+                        case "change-direction":
+                            this.game.setSecondPlayerDirection(message.direction);
+                            break;
+
+                        case "ping":
+                            this.sendMessage({ type: "pong" });
+                            break;
+                    }
+                })
+            }
+
+            setPlayerDirection(direction) {
+                this.game.setFirstPlayerDirection(direction);
+            }
+
+            destroy() {
+                this.state = "finished";
+                this.networkSub && this.networkSub.unsubscribe();
+                this.game.stop();
+                this.gameSub && this.gameSub.unsubscribe();
+                this.network.destroy();
+            }
+
+            /**
+             * @private
+             * @param {HostMessage} message
+             */
+            sendMessage(message) {
+                this.network.send(JSON.stringify(message));
+            }
+        }
+
+        /**
+         * @extends Observable<RemoteGameEvent>
+         */
+        class GamePlayerModel extends Observable {
+            static PING_PERIOD = 500;
+            static ARTIFICIAL_PING = 0;
+
+            /**@private */ state = "starting"
+
+            /**@private @type {?number} */ scheduledPing = null;
+            /**@private */ pingStart = 0;
+
+            /**
+             * @param {Network} network
+             */
+            constructor(network) {
+                super();
+
+                /**@private */
+                this.network = network;
+            }
+
+            start() {
+                /** @private @type {Subscription=} */
+                this.networkSub = this.network.subscribe(async (e) => {
+                    if(GamePlayerModel.ARTIFICIAL_PING) {
+                        await new Promise(resolve => setTimeout(resolve, GamePlayerModel.ARTIFICIAL_PING / 2));
+                    }
+
+                    if(e.type === "closed") {
+                        this.sendUpdate({ type: "finished" });
+                        this.destroy();
+
+                        return;
+                    }
+
+                    /**
+                     * @type {HostMessage}
+                     */
+                    const message = JSON.parse(e.data);
+
+                    switch(message.type) {
+                        case "start":
+                            this.schedulePing(0);
+                            this.sendMessage({ type: "ready" });
+                            this.state = "game";
+                            break;
+
+                        case "next-state":
+                            this.sendUpdate({
+                                ...message,
+                                type: "state"
+                            })
+                            break;
+
+                        case "pong":
+                            const pingEnd = Date.now();
+                            this.schedulePing(GamePlayerModel.PING_PERIOD);
+                            this.sendUpdate({
+                                type: "ping",
+                                ping: pingEnd - this.pingStart
+                            });
+                            break;
+                    }
+                })
+            }
+
+            setPlayerDirection(direction) {
+                this.sendMessage({
+                    type: "change-direction",
+                    direction
+                })
+            }
+
+            destroy() {
+                this.networkSub && this.networkSub.unsubscribe();
+                this.network.destroy();
+                if(this.scheduledPing) clearTimeout(this.scheduledPing);
+            }
+
+            /**
+             * @private
+             * @param {number} timeout
+             */
+            schedulePing(timeout) {
+                if(this.scheduledPing) clearTimeout(this.scheduledPing);
+                this.scheduledPing = setTimeout(() => {
+                    this.pingStart = Date.now();
+                    this.sendMessage({ type: "ping" });
+                }, timeout)
+            }
+
+            /**
+             * @private
+             * @param {PlayerMessage} message
+             */
+            sendMessage(message) {
+                if(GamePlayerModel.ARTIFICIAL_PING) {
+                    setTimeout(() => {
+                        this.network.send(JSON.stringify(message));
+                    }, GamePlayerModel.ARTIFICIAL_PING / 2)
+                } else {
+                    this.network.send(JSON.stringify(message));
+                }
+            }
+        }
+
+        /**
+         * @extends Observable<{ type: "finished" }>
+         */
+        class RemoteGameController extends Observable {
+
+            /**
+             * @param {GameHostModel | GamePlayerModel} model
+             * @param {GameView} view 
+             */
+            constructor(
+                model,
+                view
+            ) {
+                super();
+                this.model = model;
+                this.view = view;
+            }
+
+            start() {
+                this.modelSub = this.model.subscribe(e => {
+                    switch(e.type) {
+                        case "state":
+                            const update = Object.assign({}, e);
+                            delete e.type;
+                            this.view.setState(update)
+                            break;
+
+                        case "finished":
+                            this.destroy();
+                            this.sendUpdate({ type: "finished" });
+                            break;
+
+                        case "ping":
+                            this.view.displayPing(e.ping);
+                            break;
+                    }
+                })
+
+                this.viewSub = this.view.subscribe(e => {
+                    if(e.type === "secondary-direction") return;
+
+                    this.model.setPlayerDirection(e.direction);
+                })
+
+                this.model.start();
+                this.view.start();
+            }
+
+            destroy() {
+                this.modelSub.unsubscribe();
+                this.viewSub.unsubscribe();
+
+                this.model.destroy();
+                this.view.stop();
+            }
+        }
+        
+        /**
+         * @typedef {"start" | "loading" | "waiting" | "game" | "finished" | "p2p" | "p2p-wait" | "p2p-join" | "p2p-ready-to-start"} Stage
+         * @typedef {"idle" | "creating" | "host-waiting-answer" | "player-waiting-connection" | "host-connecting" | "connected" } P2PStage
+         */
+        class App {
+            /** @type {Stage} */
+            stage = "start"
+
+            /** @type {P2PStage} */
+            p2pStage = "idle"
+
+            startInput = document.getElementById("code-input");
+
+            /**
+             * @type {Record<Stage, HTMLDivElement>}
+             */
+            stageToModal = {
+                start: document.getElementById("start"),
+                loading: document.getElementById("loading"),
+                waiting: document.getElementById("waiting"),
+                game: document.getElementById("game-window"),
+                finished: document.getElementById("finished"),
+                p2p: document.getElementById("p2p"),
+                "p2p-wait": document.getElementById("p2p-wait"),
+                "p2p-join": document.getElementById("p2p-join"),
+                "p2p-answer": document.getElementById("p2p-answer"),
+                "p2p-ready-to-start": document.getElementById("p2p-ready-to-start"),
+                "p2p-waiting-for-host": document.getElementById("p2p-waiting-for-host")
+            };
+
+            /** @type {RTCPeerConnection=} */
+            p2pConnection;
+            
+            /** @type {RTCDataChannel=} */
+            p2pDataChannel;
+
+            join(e) {
+                e.preventDefault();
+                
+                if(!this.startInput.value) return;
+
+                this.setStage("loading");
+
+                new Promise((resolve, reject) => {
+                    const ws = new WebSocket(serverAddress + "?code=" + this.startInput.value);
+                    ws.binaryType = "arraybuffer";
+
+                    ws.onmessage = e => {
+                        ws.onmessage = null;
+                        ws.onclose = null;
+                        ws.send("HI");
+                        resolve(ws);
+                    }
+
+                    ws.onclose = e => {
+                        reject(e.code);
+                    }
+                })
+                    .then((ws) => {
+                        const player = new GamePlayerModel(new WebSocketNetwork(ws));
+
+                        const controller = new RemoteGameController(player, new GameView());
+                        this.setStage("game");
+                        controller.start();
+
+                        controller.subscribe(() => {
+                            this.setStage("finished", "Host has left the game");
+                        })
+
+                        this.controller = controller;
+                    })
+                    .catch(code => {
+                        if(code === 4002) {
+                            this.setStage("finished", "Wrong room code")
+                        } else {
+                            this.setStage("finished", "Unknown error")
+                        }
+                    })
+            }
+
+            createRoom(e) {
+                this.setStage("loading");
+
+                new Promise(resolve => {
+                    const ws = new WebSocket(serverAddress);
+                    ws.binaryType = "arraybuffer";
+
+                    ws.onmessage = e => {
+                        const { code } = JSON.parse(e.data);
+
+                        this.setStage("waiting", code);
+                        this.ws = ws;
+                        this.code = code;
+
+                        ws.onmessage = () => {
+                            ws.onmessage = null;
+                            resolve(ws);
+                        }
+                    };
+                })
+                    .then((ws) => {
+                        const host = new GameHostModel(new WebSocketNetwork(ws));
+
+                        const controller = new RemoteGameController(host, new GameView());
+                        controller.subscribe(() => {
+                            this.setStage("finished", "Player has left the game");
+                        });
+                        this.setStage("game");
+
+                        controller.start();
+
+                        this.controller = controller;
+                    })
+            }
+
+            initP2P() {
+                this.setStage("loading");
+                this.p2pStage = "creating";
+                const connection = new RTCPeerConnection({ iceServers });
+                this.p2pConnection = connection;
+
+                const dataChannel = connection.createDataChannel("data");
+                this.p2pDataChannel = dataChannel;
+
+                /** @type {RTCSessionDescriptionInit} */
+                let offer;
+
+                /** @type {RTCIceCandidate[]} */
+                const candidates = [];
+
+                connection.createOffer()
+                    .then(localOffer => {
+                        connection.setLocalDescription(localOffer);
+                        offer = localOffer;
+                    });
+
+                connection.onicecandidate = ({ candidate }) => {
+                    if(candidate) candidates.push(candidate);
+                }
+
+                connection.onicegatheringstatechange = () => {
+                    if(connection.iceGatheringState !== "complete") return;
+
+                    const textData = JSON.stringify({
+                        offer: offer.sdp,
+                        candidates: candidates.map(candidate => candidate.toJSON())
+                    });
+
+                    const data = encoder.encode(textData);
+
+                    readableStreamToArrayBuffer(
+                        arrayBufferToReadableStream(data.buffer)
+                            .pipeThrough(new CompressionStream('gzip'))
+                    )
+                        .then(compressed => {
+                            const base64 = arrayBufferToBase64(compressed);
+
+                            return QRCode.toDataURL(`http://scan.this/?code=${base64}`, {
+                                errorCorrectionLevel: 'L',
+                            })
+                                .then(qr => Promise.resolve({ qr, base64 }))
+                        })
+                        .then(({ qr, base64 }) => {
+                            this.setStage("p2p-wait", { qr, base64 });
+                            this.p2pStage = "host-waiting-answer";
+                        })
+                };
+            }
+
+            async joinP2P(e) {
+                e.preventDefault();
+
+                const key = document.getElementById("p2p-offer").value;
+
+                if(!key) return;
+
+                this.setStage("loading");
+                this.p2pStage = "creating";
+                
+                const buffer = await readableStreamToArrayBuffer(
+                    arrayBufferToReadableStream(base64ToArrayBuffer(key))
+                        .pipeThrough(new DecompressionStream("gzip"))
+                );
+                
+                const { offer: sdp, candidates } = JSON.parse(decoder.decode(buffer));
+
+                const offer = new RTCSessionDescription({
+                    type: "offer",
+                    sdp
+                });
+
+                const connection = new RTCPeerConnection({
+                    iceServers
+                });
+
+                this.p2pConnection = connection;
+
+                connection.setRemoteDescription(offer);
+
+                for(const candidate of candidates) {
+                    connection.addIceCandidate(candidate);
+                }
+
+                const answer = await connection.createAnswer();
+
+                /** @type {RTCIceCandidate[]} */
+                const answerCandidates = []; 
+                connection.onicecandidate = (e) => {
+                    e.candidate && answerCandidates.push(e.candidate);
+                }
+
+                connection.onicegatheringstatechange = async () => {
+                    if(connection.iceGatheringState !== "complete") return;
+
+                    const compressed = await readableStreamToArrayBuffer(
+                        arrayBufferToReadableStream(
+                            encoder.encode(JSON.stringify({
+                                answer: answer.sdp,
+                                candidates: answerCandidates.map(c => c.toJSON())
+                            }))
+                        ).pipeThrough(new CompressionStream("gzip"))
+                    )
+
+                    const base64 = arrayBufferToBase64(compressed);
+
+                    const qr = await QRCode.toDataURL(`http://scan.this/?code=${base64}`, {
+                        errorCorrectionLevel: 'L',
+                    })
+
+                    this.setStage("p2p-answer", {
+                        qr, base64
+                    })
+                    this.p2pStage = "player-waiting-connection";
+
+                    connection.ondatachannel = (e) => {
+                        this.p2pDataChannel = e.channel;
+
+                        this.p2pStage = "connected";
+                        this.setStage("p2p-waiting-for-host");
+
+                        const network = new WebRTCNetwork(
+                            this.p2pConnection,
+                            e.channel
+                        );
+
+                        const model = new GamePlayerModel(network);
+
+                        /** @private @type {Subscription?=} */
+                        this.p2pPlayerModelSub = model.subscribe((e) => {
+                            if(e.type !== "state") return;
+                            this.p2pPlayerModelSub.unsubscribe();
+
+                            delete this.p2pPlayerModelSub;
+                            this.setStage("game");
+                        })
+
+                        const controller = new RemoteGameController(
+                            model,
+                            new GameView()
+                        )
+
+                        controller.start();
+
+                        controller.subscribe((e) => {
+                            this.setStage("finished", "Host has left the game")
+
+                            delete this.p2pDataChannel;
+                            delete this.p2pConnection;
+                            this.p2pStage = "idle";
+                        })
+
+                        this.controller = controller;
+                    }
+                }
+
+                connection.setLocalDescription(answer);
+            }
+
+            async handleAnswer(e) {
+                e.preventDefault();
+
+                const key = document.getElementById("p2p-offer").value;
+
+                if(!key) return;
+
+                this.setStage("loading");
+                this.p2pStage = "host-connecting";
+
+                const buffer = await readableStreamToArrayBuffer(
+                    arrayBufferToReadableStream(base64ToArrayBuffer(key))
+                        .pipeThrough(new DecompressionStream("gzip"))
+                );
+                
+                const { answer: sdp, candidates } = JSON.parse(decoder.decode(buffer));
+
+                const answer = new RTCSessionDescription({
+                    type: "answer",
+                    sdp
+                })
+
+                const connection = this.p2pConnection;
+
+                connection.setRemoteDescription(answer);
+
+                for(const candidate of candidates) {
+                    connection.addIceCandidate(candidate);
+                }
+
+                connection.onconnectionstatechange = () => {
+                    if(connection.connectionState !== "connected") return;
+
+                    connection.onconnectionstatechange = null;
+
+                    this.p2pStage = "connected";
+                    this.setStage("p2p-ready-to-start");
+
+                    this.p2pDataChannel.onclose = () => {
+                        this.setStage("finished", "Player has left the game");
+
+                        delete this.p2pDataChannel;
+                        delete this.p2pConnection;
+                        this.p2pStage = "idle";
+                    }
+                }
+            }
+
+            async startP2PGame() {
+                const network = new WebRTCNetwork(this.p2pConnection, this.p2pDataChannel);
+                const model = new GameHostModel(network);
+
+                this.setStage("game");
+
+                const controller = new RemoteGameController(model, new GameView());
+
+                controller.subscribe(e => {
+                    this.setStage("finished", "Player has left the game");
+
+                    delete this.p2pDataChannel;
+                    delete this.p2pConnection;
+                    this.p2pStage = "idle";
+                })
+
+                controller.start();
+
+                this.controller = controller;
+            }
+
+            async cancelRoom() {
+                if(!this.ws) return;
+
+                this.ws.close();
+
+                this.setStage("start");
+            }
+
+            cancelP2P() {
+                switch(this.p2pStage) {
+                    case "host-waiting-answer":
+                    case "connected":
+                        this.p2pConnection.close();
+                        this.p2pDataChannel.close();
+                        break;
+
+                    case "player-waiting-connection":
+                        this.p2pConnection.close();
+                        break;
+                }
+
+                this.p2pStage = "idle";
+                this.setStage("start");
+            }
+
+            reset() {
+                this.setStage("start");
+            }
+
+            startLocal() {
+                this.controller = new SingleScreenGameController(new GameView(), new GameModel(20));
+                this.setStage("game");
+
+                this.controller.start();
+            }
+
+            exitGame() {
+                this.controller.destroy();
+                this.setStage("start");
+            }
+
+            download = () => {
+                const body = document
+                    .body
+                    .outerHTML
+                    .replace(`const serverAddress = "/connect";`, `const serverAddress = "${location.origin}/connect";`)
+                    .replace(`<button class="button" type="button" onclick="app.download()">Download</button>`, "");
+
+                const html = `
+                    <html>
+                    ${document.head.outerHTML}
+                    ${body}
+                    </html>
+                `
+                const file = new Blob([html], {
+                    type: "text/html"
+                })
+                
+                const url = URL.createObjectURL(file);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "pong.html";
+                a.click();
+
+                URL.revokeObjectURL(url);
+            }
+
+            /**
+             * @param {Stage} stage
+             */
+            setStage(stage, arg) {
+                if(this.stage === stage) return;
+                this.stage = stage;
+
+                for(const stageName in this.stageToModal) {
+                    if(stageName === stage) this.stageToModal[stageName].style.display = "unset";
+                    else this.stageToModal[stageName].style.display = "none";
+                }
+
+                switch(stage) {
+                    case "start":
+                        document.getElementById("code-input").value = "";
+
+                    case "waiting": 
+                        document.getElementById("code").innerText = arg;
+                        break;
+                        
+                    case "finished":
+                        document.getElementById("finish-message").innerText = arg;
+                        break;
+
+                    case "p2p-wait":
+                        document.getElementById("qr-offer").src = arg.qr;
+                        document.getElementById("base64-offer").value = arg.base64;
+                        break;
+                        
+                    case "p2p-answer":
+                        document.getElementById("qr-answer").src = arg.qr;
+                        document.getElementById("base64-answer").value = arg.base64;
+                        break;
+
+                    case "p2p-join":
+                        document.getElementById("p2p-offer").value = "";
+                        break;
+                }
+            }
+        }
+
+        const app = new App();
+
+    </script>
+    <style>
+
+        * {
+            font-family: sans-serif;
+
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+
+        }
+        .container {
+            width: 100vw;
+            height: 100vh;
+
+            background-color: black;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            position: relative;
+
+            background-color: #fff;
+
+            width: 300px;
+            padding: 20px;
+        }
+
+        .modal h2 {
+            position: absolute;
+            left: 0;
+            bottom: 100%;
+
+            width: 100%;
+            
+            text-align: center;
+
+            color: white;
+
+            font-size: 40px;
+
+            margin: 0;
+        }
+
+        .input {
+            width: 100%;
+
+            border: 2px solid black;
+
+            font-size: 20px;
+
+            outline: none;
+
+            background-color: #fff;
+        }
+
+        .buttons {
+            width: 100%;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-top: 10px;
+        }
+
+        .button {
+            width: calc(50% - 5px);
+
+            border: 2px solid black;
+
+            background-color: #fff;
+
+            font-size: 20px;
+
+            padding: 0;
+
+            cursor: pointer;
+
+            transition: color .3s, background .3s;
+        }
+
+        .button:active {
+            background-color: black;
+            color: white;
+        }
+
+        .other-options {
+            position: absolute;
+            top: calc(100% + 20px);
+            left: 0;
+        }
+
+        .other-options .button {
+            display: block;
+            width: 100%;
+        }
+        
+        .other-options .button:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        #loading {
+            font-size: 40px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        #code {
+            font-size: 30px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .text {
+            font-size: 20px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .p2p-description {
+            width: 500px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .p2p-qr {
+            width: 100%;
+        }
+
+        .p2p-base64 {
+            color: #000;
+            font-size: 20px;
+
+            width: 100%;
+            height: 100px;
+
+            resize: none;
+        }
+
+        #p2p-offer {
+            width: 100%;
+            height: 200px;
+
+            resize: none;
+        }
+
+        @media screen and (max-width: 600px) {
+            #game-window {
+                width: 100%;
+                height: 100%;
+            }
+
+            .game-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                padding-top: 30px;
+            }
+
+            .game-container .score {
+                position: relative;
+            }
+
+            .game-container .exit-button {
+                top: unset;
+                left: 10px;
+                bottom: 10px;
+
+                width: calc(100% - 20px);
+            }
+
+            .game-container .control-buttons {
+                display: block;
+            }
+
+            .control-buttons button {
+                display: block;
+
+                margin-top: 20px;
+
+                width: 100px;
+                height: 80px;
+
+                border: 2px solid white;
+
+                background-color: #fff;
+
+                color: black;
+                font-size: 20px;
+
+                transition: color .3s, background .3s;
+
+                user-select: none;
+            }
+
+            .control-buttons button:active {
+                background-color: black;
+                color: white;
+            }
+
+            .other-options button:first-child {
+                display: none;
+            }
+        }
+
+        .score {
+            position: absolute;
+            left: 0;
+            bottom: 100%;
+
+            width: 100%;
+
+            color: white;
+            font-size: 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        #ping {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+
+            color: white;
+            font-size: 20px;
+        }
+
+        .exit-button {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            
+            width: 100%;
+
+            border: 2px solid white;
+
+            color: white;
+            font-size: 20px;
+
+            background: black;
+
+            cursor: pointer;
+
+            transition: color .3s, background .3s;
+        }
+
+        .exit-button:active {
+            color: black;
+            background: white;
+        }
+
+        .control-buttons {
+            display: none;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "name": "pong-two",
+  "description": "30 08 s 20 53 p 23 46    02 53",
+  "version": "1.0.0",
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
