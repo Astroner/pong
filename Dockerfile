@@ -6,7 +6,7 @@ COPY package-lock.json .
 RUN npm ci
 
 COPY index.js .
-COPY index.html .
+COPY index.min.html .
 
 ENV PORT=80
 EXPOSE 80
